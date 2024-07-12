@@ -1,5 +1,5 @@
 import { products } from '@/app/utils/products';
-import { FilterProduct } from '@/interfaces/product.interface';
+import { FilterProduct, Products } from '@/interfaces/product.interface';
 import instance from '@/utils/instances';
 import { headers } from 'next/headers';
 
@@ -14,7 +14,7 @@ export const getProducts = async ({
     );
     const products = data?.data;
 
-    console.log(data)
+    console.log(data);
 
     return products;
   } catch (err) {
@@ -32,14 +32,13 @@ export const getProductByID = async (id: number) => {
   }
 };
 
-
-export const createProduct = async (formData: FormData) => {
+export const createProduct = async (formData: Products) => {
   try {
     const token = localStorage.getItem('token');
     const config = {
-      headers: { 
+      headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
       },
     };
     const { data } = await instance.post('/product', formData, config);

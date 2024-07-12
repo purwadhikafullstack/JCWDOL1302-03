@@ -1,14 +1,13 @@
-"use client"
+'use client';
 
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import api from '@/api/apiApp';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 
 interface FormData {
   address: string;
   city: string;
-  state: string;
   postalCode: string;
   country: string;
   province: string;
@@ -19,30 +18,31 @@ interface UpdateAddressProps {
   id: string; // Assume you pass the addressId as a prop
 }
 
-const UpdateAddress: React.FC<UpdateAddressProps> = ({ id }) => {
+const UpdateAddress = () => {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     address: '',
     city: '',
-    state: '',
     postalCode: '',
     country: '',
     province: '',
-    subdistrict: ''
+    subdistrict: '',
   });
+
+  const params = useParams();
 
   useEffect(() => {
     const fetchAddress = async () => {
       try {
-        const response = await api.put(`/api/address/:${id}`);
+        const response = await api.put(`/api/address/:${params.id}`);
         setFormData(response.data);
       } catch (error) {
-        toast.error("Failed to fetch address data");
+        toast.error('Failed to fetch address data');
       }
     };
 
     fetchAddress();
-  }, [id]);
+  }, [params.id]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -53,21 +53,31 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ id }) => {
     e.preventDefault();
     try {
       const updatedFormData = { ...formData };
-      const result = await api.put(`/api/address/${id}`, updatedFormData);
+      const result = await api.put(
+        `/api/address/${params.id}`,
+        updatedFormData,
+      );
       router.push('/address');
-      toast.success("Successfully updated address");
+      toast.success('Successfully updated address');
       console.log(result);
     } catch (error) {
-      toast.error("Failed to update address");
+      toast.error('Failed to update address');
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto bg-white p-8 rounded-md shadow-md">
-      <h2 className="text-2xl font-semibold mb-6 text-center">Update Address</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-center">
+        Update Address
+      </h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
+          <label
+            htmlFor="address"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Address
+          </label>
           <input
             type="text"
             id="address"
@@ -79,7 +89,12 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ id }) => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="city" className="block text-sm font-medium text-gray-700">City</label>
+          <label
+            htmlFor="city"
+            className="block text-sm font-medium text-gray-700"
+          >
+            City
+          </label>
           <input
             type="text"
             id="city"
@@ -91,18 +106,12 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ id }) => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="state" className="block text-sm font-medium text-gray-700">State</label>
-          <input
-            type="text"
-            id="state"
-            name="state"
-            value={formData.state}
-            onChange={handleChange}
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="postalCode" className="block text-sm font-medium text-gray-700">Postal Code</label>
+          <label
+            htmlFor="postalCode"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Postal Code
+          </label>
           <input
             type="text"
             id="postalCode"
@@ -113,7 +122,12 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ id }) => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="country" className="block text-sm font-medium text-gray-700">Country</label>
+          <label
+            htmlFor="country"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Country
+          </label>
           <input
             type="text"
             id="country"
@@ -124,7 +138,12 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ id }) => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="province" className="block text-sm font-medium text-gray-700">Province</label>
+          <label
+            htmlFor="province"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Province
+          </label>
           <input
             type="text"
             id="province"
@@ -135,7 +154,12 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ id }) => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="subdistrict" className="block text-sm font-medium text-gray-700">Subdistrict</label>
+          <label
+            htmlFor="subdistrict"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Subdistrict
+          </label>
           <input
             type="text"
             id="subdistrict"
@@ -146,7 +170,10 @@ const UpdateAddress: React.FC<UpdateAddressProps> = ({ id }) => {
           />
         </div>
         <div className="flex justify-center">
-          <button type="submit" className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700">
+          <button
+            type="submit"
+            className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700"
+          >
             Submit
           </button>
         </div>

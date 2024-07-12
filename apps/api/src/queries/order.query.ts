@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import { IOrder, FilterOrder, ResultOrder} from '@/interfaces/order.interface';
-import cron from 'node-cron'; 
+import { IOrder, FilterOrder, ResultOrder } from '@/interfaces/order.interface';
+import cron from 'node-cron';
 
 const prisma = new PrismaClient();
 
@@ -11,7 +11,7 @@ const getOrdersByUserQuery = async (userID: number) => {
         user_id: userID,
       },
     });
-    return orders
+    return orders;
   } catch (e) {
     throw e;
   }
@@ -29,26 +29,23 @@ const createOrderQuery = async (data: IOrder) => {
       updateAt,
     } = data;
 
-        const order = await prisma.order.create({
-            data: {
-                user_id,
-                store_id,
-                voucher_id,
-                status,
-                totalAmount,
-                createdAt, 
-                updateAt
-                
-            }
-        })
+    const order = await prisma.order.create({
+      data: {
+        user_id,
+        store_id,
+        voucher_id,
+        status,
+        totalAmount,
+        createdAt,
+        updateAt,
+      },
+    });
 
-        return order
-
-    } catch (err) {
-        throw err
-        
-    }
-}
+    return order;
+  } catch (err) {
+    throw err;
+  }
+};
 
 const confirmOrderByUserQuery = async (id: number, status: string) => {
   try {
@@ -92,9 +89,7 @@ cron.schedule('0 0 */24 */2 *', async () => {
   }
 });
 
-const getOrderQuery = async ( 
-  filters: FilterOrder,
-): Promise<ResultOrder> => {
+const getOrderQuery = async (filters: FilterOrder): Promise<ResultOrder> => {
   try {
     const { user_id = '', page = 1, pageSize = 10 } = filters;
     const skip = Number(page) > 1 ? (Number(page) - 1) * Number(pageSize) : 0;
@@ -102,9 +97,10 @@ const getOrderQuery = async (
     const userIdString = user_id.toString();
 
     const order = await prisma.order.findMany({
-      include:{
+      include: {
+        orderItem: true,
         user: true,
-        store: true
+        store: true,
       },
       where: {
         status: { contains: userIdString },
@@ -136,9 +132,9 @@ const getOrderByIDQuery = async (id: number) => {
   try {
     const order = await prisma.order.findUnique({
       include: {
+        orderItem: true,
         user: true,
-        store:true,
-        
+        store: true,
       },
       where: {
         id: Number(id),
@@ -150,4 +146,10 @@ const getOrderByIDQuery = async (id: number) => {
   }
 };
 
-export {createOrderQuery, getOrderQuery, confirmOrderByUserQuery, getOrdersByUserQuery, getOrderByIDQuery}
+export {
+  createOrderQuery,
+  getOrderQuery,
+  confirmOrderByUserQuery,
+  getOrdersByUserQuery,
+  getOrderByIDQuery,
+};

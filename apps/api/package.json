@@ -37,6 +37,7 @@
     "@types/haversine": "^1.1.8",
     "@types/multer": "^1.4.11",
     "@types/node-cron": "^3.0.11",
+    "@types/node-fetch": "^2.6.11",
     "@types/nodemailer": "^6.4.15",
     "express-validator": "^7.1.0",
     "multer": "^1.4.5-lts.1",

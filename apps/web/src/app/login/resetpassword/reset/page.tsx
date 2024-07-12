@@ -35,7 +35,8 @@ export default function UpdatePasswordPage() {
     onSubmit: async ({ password }: Verified) => {
       setIsLoading(true);
       try {
-        const param = params.toString().replace('token=', '');
+        // const param = params.toString().replace('token=', '');
+        const param = params?.toString().replace('token=', '') ?? '';
         await instance.post(
           '/auth/resetconfirmation/updatepassword',
           {

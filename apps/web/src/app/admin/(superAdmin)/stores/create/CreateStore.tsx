@@ -40,6 +40,42 @@ export default function CreateStore() {
     getListAdmins();
   }, []);
 
+  const [provinces, setProvinces] = useState<
+    { province: string; province_id: string }[]
+  >([]);
+  const [cities, setCities] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetchProvinces();
+  }, []);
+
+  const fetchProvinces = async () => {
+    try {
+      const response = await fetch('/api/rajaongkir/provinces');
+      const data = await response.json();
+      const provinces = data.rajaongkir.results.map((province: any) => ({
+        province: province.province,
+        province_id: province.province_id,
+      }));
+      setProvinces(provinces);
+    } catch (error) {
+      console.error('Error fetching provinces:', error);
+    }
+  };
+
+  const fetchCities = async (provinceId: string) => {
+    try {
+      const response = await fetch(
+        `/api/rajaongkir/cities?province=${provinceId}`,
+      );
+      const data = await response.json();
+      const cities = data.rajaongkir.results.map((city: any) => city.city_name);
+      setCities(cities);
+    } catch (error) {
+      console.error('Error fetching cities:', error);
+    }
+  };
+
   type ChangeEvent =
     | React.ChangeEvent<HTMLInputElement>
     | React.ChangeEvent<HTMLTextAreaElement>
@@ -50,6 +86,15 @@ export default function CreateStore() {
       ...formData,
       [e.target.name]: e.target.value,
     });
+
+    if (e.target.name === 'province') {
+      const selectedProvince = provinces.find(
+        (prov) => prov.province === e.target.value,
+      );
+      if (selectedProvince) {
+        fetchCities(selectedProvince.province_id);
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -135,29 +180,44 @@ export default function CreateStore() {
                 <label htmlFor="province" className="block">
                   Province
                 </label>
-                <input
-                  type="text"
+                <select
                   id="province"
                   name="province"
                   className="mt-1 block w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent sm:text-sm"
                   value={formData.province}
                   onChange={handleChange}
                   required
-                />
+                >
+                  <option value="">Select Province</option>
+                  {provinces.map((province) => (
+                    <option
+                      key={province.province_id}
+                      value={province.province}
+                    >
+                      {province.province}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="mb-4">
                 <label htmlFor="city" className="block">
                   City
                 </label>
-                <input
-                  type="text"
+                <select
                   id="city"
                   name="city"
                   className="mt-1 block w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent sm:text-sm"
                   value={formData.city}
                   onChange={handleChange}
                   required
-                />
+                >
+                  <option value="">Select City</option>
+                  {cities.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="mb-4">
                 <label htmlFor="postalCode" className="block">

@@ -21,7 +21,7 @@ export class AuthMiddlewares {
       if (!verifyAdmin) throw new Error('Unauthorized!');
 
       req.user = verifyUser as User;
-      req.admin = verifyAdmin as Admin
+      req.admin = verifyAdmin as Admin;
 
       next();
     } catch (err) {

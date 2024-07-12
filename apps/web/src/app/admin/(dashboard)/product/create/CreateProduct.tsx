@@ -3,26 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Container from '@/components/Container';
 import { createProduct } from '@/services/prouduct.service';
-
-
+import { FilterProduct, Products } from '@/interfaces/product.interface';
 import api from '@/api/apiApp';
-
 
 interface Category {
   id: number;
   category: string;
 }
+
 export default function CreateProduct() {
   const [categories, setCategories] = useState<Category[]>([]);
 
-
   const getListCategories = async () => {
     try {
-      const result = await api.get("/api/categories");
+      const result = await api.get('/api/categories');
       setCategories(result.data.data);
       console.log(result);
     } catch (error) {
-      console.error("Failed to fetch categories:", error);
+      console.error('Failed to fetch categories:', error);
     }
   };
 
@@ -30,14 +28,14 @@ export default function CreateProduct() {
     getListCategories();
   }, []);
 
-
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Products>({
+    id: 0,
+    admin_id: 0,
     name: '',
     description: '',
-    price: '',
-    category_id: '',
+    price: 0,
+    category_id: 0,
     image: '',
-    stock: ''
   });
 
   const router = useRouter();
@@ -60,12 +58,12 @@ export default function CreateProduct() {
     e.preventDefault();
 
     try {
-        const formDataWithAdminIdAsNumber = {
-          ...formData,
-          
-          price: parseFloat(formData.price) || null
-        };
-      const product = await createProduct (formDataWithAdminIdAsNumber);
+      const formDataWithAdminIdAsNumber = {
+        ...formData,
+
+        price: formData.price || 0,
+      } as Products;
+      const product = await createProduct(formDataWithAdminIdAsNumber);
       // const store = await createStore(formData);
       if (!product) throw new Error('Create product failed!');
       alert('Create product success');
@@ -172,20 +170,6 @@ export default function CreateProduct() {
                   value={formData.image}
                   onChange={handleChange}
                   required
-                />
-              </div>
-
-              <div className="mb-4">
-                <label htmlFor="stock" className="block">
-                  Stock
-                </label>
-                <input
-                  type="text"
-                  id="stock"
-                  name="stock"
-                  className="mt-1 block w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent sm:text-sm"
-                  value={formData.stock}
-                  onChange={handleChange}
                 />
               </div>
 

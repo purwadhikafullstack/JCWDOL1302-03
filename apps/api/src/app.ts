@@ -27,6 +27,8 @@ import { StockRouter } from './routers/stock.router';
 import { ShippingRouter } from './routers/shipping.router';
 import { CartRouter } from './routers/cart.router';
 import { RoleRouter } from './routers/role.router';
+import { RajaOngkirProvinceRouter } from './routers/rajaongkir.province.router';
+import { RajaOngkirCityRouter } from './routers/rajaongkir.city.router';
 
 export default class App {
   private app: Express;
@@ -87,6 +89,8 @@ export default class App {
     const shippingRouter = new ShippingRouter();
     const cartRouter = new CartRouter();
     const roleRouter = new RoleRouter();
+    const rajaOngkirProvinceRouter = new RajaOngkirProvinceRouter();
+    const rajaOngkirCityRouter = new RajaOngkirCityRouter();
 
     this.app.get('/', (req: Request, res: Response) => {
       res.send(`Hello, Purwadhika Student !`);
@@ -108,6 +112,11 @@ export default class App {
     this.app.use('/api/shipping', shippingRouter.getRouter());
     this.app.use('/api/cart', cartRouter.getRouter());
     this.app.use('/api/role', roleRouter.getRouter());
+    this.app.use(
+      '/api/rajaongkir/provinces',
+      rajaOngkirProvinceRouter.getRouter(),
+    );
+    this.app.use('/api/rajaongkir/cities', rajaOngkirCityRouter.getRouter());
   }
 
   public start(): void {

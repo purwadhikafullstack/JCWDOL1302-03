@@ -7,8 +7,15 @@ const createMyAddressQuery = async (data: IAddress, token: any) => {
   try {
     const userId = token.id;
 
-    const { city, postalCode, country, isPrimary, province, subdistrict } =
-      data;
+    const {
+      city,
+      postalCode,
+      country,
+      isPrimary,
+      province,
+      subdistrict,
+      address,
+    } = data;
 
     const myAddress = await prisma.address.create({
       data: {
@@ -20,6 +27,7 @@ const createMyAddressQuery = async (data: IAddress, token: any) => {
         isPrimary,
         province,
         subdistrict,
+        address,
       },
     });
 

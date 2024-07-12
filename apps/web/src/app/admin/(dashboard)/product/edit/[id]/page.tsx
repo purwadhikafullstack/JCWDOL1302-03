@@ -5,6 +5,7 @@ import { getProductByID, updateProduct } from '@/services/prouduct.service';
 import { useRouter } from 'next/navigation';
 import Container from '@/components/Container';
 import api from '@/api/apiApp';
+import Image from 'next/image';
 
 type Props = { params: { id: number } };
 interface Category {
@@ -96,7 +97,9 @@ const Page = ({ params: { id } }: Props) => {
       <Container>
         <div className="min-h-screen flex items-center justify-center">
           <div className="max-w-md w-full p-8 rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold mb-6 text-center">EDIT PRODUCT</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center">
+              EDIT PRODUCT
+            </h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label htmlFor="description" className="block">
@@ -151,7 +154,7 @@ const Page = ({ params: { id } }: Props) => {
                   Image Preview
                 </label>
                 {formData.image && (
-                  <img
+                  <Image
                     src={formData.image} // Menggunakan URL gambar
                     alt="Product Image"
                     className="w-full h-auto mb-2"
@@ -186,7 +189,8 @@ const Page = ({ params: { id } }: Props) => {
             </form>
           </div>
         </div>
-      </Container>/
+      </Container>
+      /
     </>
   );
 };
