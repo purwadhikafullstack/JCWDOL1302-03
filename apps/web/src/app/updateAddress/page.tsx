@@ -14,10 +14,6 @@ interface FormData {
   subdistrict: string;
 }
 
-interface UpdateAddressProps {
-  id: string; // Assume you pass the addressId as a prop
-}
-
 const UpdateAddress = () => {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
@@ -32,17 +28,19 @@ const UpdateAddress = () => {
   const params = useParams();
 
   useEffect(() => {
-    const fetchAddress = async () => {
-      try {
-        const response = await api.put(`/api/address/:${params.id}`);
-        setFormData(response.data);
-      } catch (error) {
-        toast.error('Failed to fetch address data');
-      }
-    };
+    if (params && params.id) {
+      const fetchAddress = async () => {
+        try {
+          const response = await api.get(`/api/address/${params.id}`);
+          setFormData(response.data);
+        } catch (error) {
+          toast.error('Failed to fetch address data');
+        }
+      };
 
-    fetchAddress();
-  }, [params.id]);
+      fetchAddress();
+    }
+  }, [params]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -51,17 +49,21 @@ const UpdateAddress = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const updatedFormData = { ...formData };
-      const result = await api.put(
-        `/api/address/${params.id}`,
-        updatedFormData,
-      );
-      router.push('/address');
-      toast.success('Successfully updated address');
-      console.log(result);
-    } catch (error) {
-      toast.error('Failed to update address');
+    if (params && params.id) {
+      try {
+        const updatedFormData = { ...formData };
+        const result = await api.put(
+          `/api/address/${params.id}`,
+          updatedFormData,
+        );
+        router.push('/address');
+        toast.success('Successfully updated address');
+        console.log(result);
+      } catch (error) {
+        toast.error('Failed to update address');
+      }
+    } else {
+      toast.error('No address ID provided');
     }
   };
 

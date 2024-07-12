@@ -3,14 +3,14 @@
 import { useFormik, FormikProvider } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import instance from '@/utils/instances';
 import { checkToken } from '@/lib/features/auth/authSlice';
 import { useAppDispatch } from '@/lib/hooks';
 import { Verified } from '@/interfaces/user.interface';
 
-export default function UpdatePasswordPage() {
+function UpdatePasswordPageContent() {
   const [see, setSee] = useState('password');
   const seePassword = () => {
     see === 'password' ? setSee('text') : setSee('password');
@@ -142,5 +142,13 @@ export default function UpdatePasswordPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function UpdatePasswordPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <UpdatePasswordPageContent />
+    </Suspense>
   );
 }

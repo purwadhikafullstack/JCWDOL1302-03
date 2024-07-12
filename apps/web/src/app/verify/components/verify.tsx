@@ -1,17 +1,17 @@
 'use client';
 
-
 import { useFormik, FormikProvider } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import instance from '@/utils/instances';
 import { checkToken } from '@/lib/features/auth/authSlice';
 import { useAppDispatch } from '@/lib/hooks';
 import { Verified } from '@/interfaces/user.interface';
+import { divide } from 'cypress/types/lodash';
 
-export default function Verify() {
+function VerifyContent() {
   const [see, setSee] = useState('password');
   const seePassword = () => {
     see === 'password' ? setSee('text') : setSee('password');
@@ -36,7 +36,7 @@ export default function Verify() {
     onSubmit: async ({ password }: Verified) => {
       setIsLoading(true);
       try {
-        const param = params.toString().replace('token=', '');
+        const param = params ? params.toString().replace('token=', '') : '';
         await instance.post(
           '/auth/verify',
           {
@@ -141,5 +141,13 @@ export default function Verify() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function Verify() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyContent />
+    </Suspense>
   );
 }
