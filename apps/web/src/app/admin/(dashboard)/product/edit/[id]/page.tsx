@@ -20,7 +20,7 @@ const Page = ({ params: { id } }: Props) => {
     description: '',
     price: '',
     category_id: '',
-    image: '',
+    image: '', // Include image in the state
     stock: '',
   });
 
@@ -28,6 +28,7 @@ const Page = ({ params: { id } }: Props) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
+  // Fetch categories for the dropdown
   const getListCategories = async () => {
     try {
       const result = await api.get('/api/categories');
@@ -41,17 +42,18 @@ const Page = ({ params: { id } }: Props) => {
     getListCategories();
   }, []);
 
+  // Fetch product details to populate the form
   useEffect(() => {
     (async () => {
       const data = await getProductByID(id);
       setFormData({
-        admin_id: data.admin_id,
+        admin_id: data.admin_id.toString(),  // Convert number to string
         name: data.name,
         description: data.description,
-        price: data.price,
-        category_id: data.category_id,
-        image: data.image,
-        stock: data.stock,
+        price: data.price.toString(),       // Convert number to string
+        category_id: data.category_id.toString(),  // Convert number to string
+        image: data.image ? `uploads/${data.image}` : '',  // Adjust image path
+        stock: data.stock.toString(),       // Convert number to string
       });
     })();
   }, [id]);
@@ -74,10 +76,13 @@ const Page = ({ params: { id } }: Props) => {
 
     try {
       const formDataWithAdminIdAsNumber = {
-        ...formData,
         admin_id: parseInt(formData.admin_id, 10),
-        price: parseInt(formData.price) || null,
-        stock: parseInt(formData.stock) || null,
+        name: formData.name,
+        description: formData.description,
+        price: parseInt(formData.price, 10) || 0,
+        category_id: parseInt(formData.category_id, 10),
+        image: formData.image,  // Use existing image URL
+        stock: parseInt(formData.stock, 10) || 0,
       };
 
       const product = await updateProduct(id, formDataWithAdminIdAsNumber);
@@ -101,6 +106,20 @@ const Page = ({ params: { id } }: Props) => {
               EDIT PRODUCT
             </h2>
             <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label htmlFor="name" className="block">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  className="mt-1 block w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent sm:text-sm"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
               <div className="mb-4">
                 <label htmlFor="description" className="block">
                   Description
@@ -130,7 +149,7 @@ const Page = ({ params: { id } }: Props) => {
                 />
               </div>
               <div className="mb-4">
-                <label htmlFor="category" className="block">
+                <label htmlFor="category_id" className="block">
                   Category
                 </label>
                 <select
@@ -155,8 +174,10 @@ const Page = ({ params: { id } }: Props) => {
                 </label>
                 {formData.image && (
                   <Image
-                    src={formData.image} // Menggunakan URL gambar
+                    src={formData.image.startsWith('http') ? formData.image : `/${formData.image}`}
                     alt="Product Image"
+                    width={400}  // Set a default width for the image
+                    height={300} // Set a default height for the image
                     className="w-full h-auto mb-2"
                   />
                 )}
@@ -175,6 +196,19 @@ const Page = ({ params: { id } }: Props) => {
                     }
                   }}
                   className="mt-1 block w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent sm:text-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="stock" className="block">
+                  Stock
+                </label>
+                <input
+                  type="text"
+                  id="stock"
+                  name="stock"
+                  className="mt-1 block w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent sm:text-sm"
+                  value={formData.stock}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -183,14 +217,13 @@ const Page = ({ params: { id } }: Props) => {
                   type="submit"
                   className="w-full bg-[#0a6406] text-white py-2 rounded-md hover:bg-[#739802] transition duration-200"
                 >
-                  {isLoading ? 'Loading...' : 'Edit Store'}
+                  {isLoading ? 'Loading...' : 'Edit Product'}
                 </button>
               </div>
             </form>
           </div>
         </div>
       </Container>
-      /
     </>
   );
 };

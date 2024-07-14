@@ -8,36 +8,12 @@ import {
   getProductByAdminIDAction,
 } from '@/actions/product.action';
 import { Request, Response, NextFunction } from 'express';
-import multer from 'multer';
-import path from 'path';
-
-// Konfigurasi penyimpanan file untuk multer
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Penyimpanan di folder 'uploads/'
-  },
-  filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + '-' + Date.now() + path.extname(file.originalname),
-    );
-  },
-});
-
-// Middleware untuk mengunggah file dengan multer
-const upload = multer({ storage: storage }).single('image');
 
 @Service()
-
-//CREATE Categories
 export class createProductController {
-  public createProductController = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
+  public createProductController = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const {file} = req
+      const { file } = req;
       const token = req.admin;
       const data = await createProductAction(req.body, String(file?.filename), token);
 
@@ -51,13 +27,8 @@ export class createProductController {
   };
 }
 
-//get Product
 export class getProductsController {
-  public getProductsController = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public getProductsController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const filters = req.query;
       const data = await getProductsAction(filters);
@@ -73,11 +44,7 @@ export class getProductsController {
 }
 
 export class getProductByIDController {
-  public getProductByIDController = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public getProductByIDController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
       const data = await getProductByIDAction(Number(id));
@@ -93,11 +60,7 @@ export class getProductByIDController {
 }
 
 export class getProductByAdminIDController {
-  public getProductsByAdminIDController = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
+  public getProductsByAdminIDController = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
       const data = await getProductByAdminIDAction(Number(id));
@@ -112,14 +75,21 @@ export class getProductByAdminIDController {
 }
 
 export class updateProductController {
-  public updateProductController = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public updateProductController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
       const filters = req.body;
+      const { file } = req;
+
+      if (file) {
+        filters.image = file.filename;
+      }
+
+      // Convert stock to number if it exists
+      if (filters.stock) {
+        filters.stock = Number(filters.stock);
+      }
+
       const data = await updateProductAction(Number(id), filters);
 
       res.status(200).json({
@@ -132,20 +102,15 @@ export class updateProductController {
   };
 }
 
-//DELETE CATEGORIES
+
 export class deleteProductController {
-  public deleteProductController = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  public deleteProductController = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
-
       const data = await deleteProductAction(Number(id));
 
       res.status(200).json({
-        message: 'Delete Product Success Full',
+        message: 'Delete Product Success',
         data,
       });
     } catch (err) {

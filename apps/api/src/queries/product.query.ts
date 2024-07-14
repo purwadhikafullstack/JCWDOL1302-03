@@ -117,29 +117,28 @@ const updateProductQuery = async (
     price?: number;
     category_id?: number;
     image?: string;
+    stock?: number; // Change this to number
   },
 ): Promise<IProduct> => {
   try {
     const updateProduct = await prisma.product.update({
       where: { id },
-
       data: {
         ...filters,
       },
     });
-
     return updateProduct;
   } catch (err) {
     throw err;
   }
 };
 
+
 const deleteProductQuery = async (id: number): Promise<IProduct> => {
   try {
     const deleteProduct = await prisma.product.delete({
       where: { id },
     });
-
     return deleteProduct;
   } catch (err) {
     throw err;

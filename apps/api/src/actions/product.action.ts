@@ -15,9 +15,8 @@ import {
 import { Product } from '@prisma/client';
 
 const createProductAction = async (data: IProduct, image: string, token: any ) => {
-    try {
-        const product = await createProductQuery(data, image, token)
-
+  try {
+    const product = await createProductQuery(data, image, token);
     return product;
   } catch (err) {
     throw err;
@@ -25,30 +24,28 @@ const createProductAction = async (data: IProduct, image: string, token: any ) =
 };
 
 const updateProductAction = async (id: number, filters: {
-    admin_id?: number
-    name?: string
-    description?: string
-    price?: number
-    category_id?: number
-    image?: string
-    stock?: string
+  admin_id?: number,
+  name?: string,
+  description?: string,
+  price?: number,
+  category_id?: number,
+  image?: string,
+  stock?: number // Change this to number
+}) => {
+  try {
+    const updateProduct = await updateProductQuery(id, filters);
+    return updateProduct;
+  } catch (err) {
+    throw err;
+  }
+};
 
-}) =>{
-    try {
-        const updateProduct = await updateProductQuery (id, filters)
-
-        return updateProduct
-    } catch (err) {
-        throw err
-    }
-}
 
 const getProductsAction = async (
   filters: FilterProduct,
 ): Promise<ResultProduct> => {
   try {
     const product = await getProductsQuery(filters);
-
     return product;
   } catch (err) {
     throw err;
@@ -58,9 +55,7 @@ const getProductsAction = async (
 const getProductByIDAction = async (id: number): Promise<Product | null> => {
   try {
     const product = await getProductByIDQuery(id);
-
     if (!product) throw new httpException(404, 'Data not found');
-
     return product;
   } catch (err) {
     throw err;
@@ -70,8 +65,7 @@ const getProductByIDAction = async (id: number): Promise<Product | null> => {
 const getProductByAdminIDAction = async (admin_id: number) => {
   try {
     const products = await getProductsByAdminIDQuery(admin_id);
-    if (!products)
-      throw new httpException(404, `Products from id ${admin_id} not found`);
+    if (!products) throw new httpException(404, `Products from id ${admin_id} not found`);
     return products;
   } catch (e) {
     throw e;
@@ -81,7 +75,6 @@ const getProductByAdminIDAction = async (admin_id: number) => {
 const deleteProductAction = async (id: number): Promise<IProduct> => {
   try {
     const deleteProduct = await deleteProductQuery(id);
-
     return deleteProduct;
   } catch (err) {
     throw err;

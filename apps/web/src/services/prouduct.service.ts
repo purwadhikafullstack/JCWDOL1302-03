@@ -1,8 +1,7 @@
-import { products } from '@/app/utils/products';
 import { FilterProduct, Products } from '@/interfaces/product.interface';
 import instance from '@/utils/instances';
-import { headers } from 'next/headers';
 
+// Mengambil daftar produk dengan filter
 export const getProducts = async ({
   name = '',
   page = 1,
@@ -12,27 +11,24 @@ export const getProducts = async ({
     const { data } = await instance.get(
       `/product?name=${name}&page=${page}&pageSize=${pageSize}`,
     );
-    const products = data?.data;
-
-    console.log(data);
-
-    return products;
+    return data?.data;
   } catch (err) {
     console.log(err);
   }
 };
 
+// Mengambil produk berdasarkan ID
 export const getProductByID = async (id: number) => {
   try {
     const { data } = await instance.get(`product/${id}`);
-    const product = data?.data;
-    return product;
+    return data?.data;
   } catch (err) {
     console.log(err);
   }
 };
 
-export const createProduct = async (formData: Products) => {
+// Membuat produk baru dengan FormData
+export const createProduct = async (formData: FormData) => {
   try {
     const token = localStorage.getItem('token');
     const config = {
@@ -48,22 +44,24 @@ export const createProduct = async (formData: Products) => {
   }
 };
 
-export const updateProduct = async (id: number, formData: any) => {
+// Memperbarui produk berdasarkan ID
+export const updateProduct = async (id: number, formData: FormData | Partial<Products>) => {
   try {
     const token = localStorage.getItem('token');
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': formData instanceof FormData ? 'multipart/form-data' : undefined,
       },
     };
     const { data } = await instance.patch(`/product/${id}`, formData, config);
-    const product = data?.data;
-    return product;
+    return data?.data;
   } catch (err) {
     console.log(err);
   }
 };
 
+// Menghapus produk berdasarkan ID
 export const deleteProduct = async (id: number) => {
   try {
     const token = localStorage.getItem('token');
@@ -73,8 +71,7 @@ export const deleteProduct = async (id: number) => {
       },
     };
     const { data } = await instance.delete(`/product/${id}`, config);
-    const product = data?.data;
-    return product;
+    return data?.data;
   } catch (err) {
     console.error(err);
   }

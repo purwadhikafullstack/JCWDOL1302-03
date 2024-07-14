@@ -9,8 +9,6 @@ import {
 import { Container, Service } from 'typedi';
 import { Router } from 'express';
 import { AuthMiddlewares } from '@/middlewares/auth.middleware';
-import express from 'express';
-import { create } from 'handlebars';
 import { uploader } from '@/helpers/multer';
 
 @Service()
@@ -31,31 +29,15 @@ export class ProductRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.post("/",this.authGuard.verifyToken, this.authGuard.superAdminGuard, uploader(`IMG`,"/product").single("image"),this.createProductController.createProductController);
-    this.router.get('/',this.getProductsController.getProductsController);
-    this.router.get('/:id',this.getProductByIDController.getProductByIDController);
-    this.router.patch(
-      '/:id',
-      uploader(`IMG`, '/product').single('image'),
-      this.updateProductController.updateProductController,
-    );
-    this.router.delete(
-      '/:id',
-      this.deleteProductController.deleteProductController,
-    );
-    this.router.get(
-      '/admin/:id/all',
-      this.getProductsByAdminIDController.getProductsByAdminIDController,
-    );
+    this.router.post("/", this.authGuard.verifyToken, uploader('IMG', "/product").single("image"), this.createProductController.createProductController);
+    this.router.get('/', this.getProductsController.getProductsController);
+    this.router.get('/:id', this.getProductByIDController.getProductByIDController);
+    this.router.patch('/:id', uploader('IMG', '/product').single('image'), this.updateProductController.updateProductController);
+    this.router.delete('/:id', this.deleteProductController.deleteProductController);
+    this.router.get('/admin/:id/all', this.getProductsByAdminIDController.getProductsByAdminIDController);
   }
 
   getRouter(): Router {
     return this.router;
   }
 }
-
-// const router = express.Router()
-
-// router.post("/", createMyAddressController)
-
-// export default router
