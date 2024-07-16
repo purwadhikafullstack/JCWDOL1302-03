@@ -4,7 +4,16 @@ import React, { useState, useEffect } from 'react';
 import api from '@/api/apiApp';
 import Container from '@/components/Container';
 import { useRouter } from 'next/navigation';
-import { Admin } from '@/interfaces/auth.admin.interface';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
 
 interface Product {
   admin_id: number;
@@ -147,6 +156,15 @@ const AdminDashboard = () => {
     getAdmins();
   }, []);
 
+  const data = [
+    { name: 'Products', count: product.length },
+    { name: 'Addresses', count: address.length },
+    { name: 'Stores', count: stores.length },
+    { name: 'Orders', count: order.length },
+    { name: 'Users', count: users.length },
+    { name: 'Admins', count: admins.length },
+  ];
+
   return (
     <Container>
       <div className="mt-10">
@@ -170,7 +188,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
-      <div className=" flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-6xl">
           <div
             className="bg-cheeryyellow w-full p-6 rounded-lg shadow-md"
@@ -192,30 +210,45 @@ const AdminDashboard = () => {
             className="bg-cheeryyellow w-full p-6 rounded-lg shadow-md"
             onClick={() => router.push('/admin/stores')}
           >
-            <p className="text-black  font-bold">TOTAL STORE</p>
+            <p className="text-black font-bold">TOTAL STORE</p>
             <p className="text-3xl font-bold text-accentDark">
               {stores.length}
             </p>
           </div>
           <div
-            className="bg-red-200 w-full p-6 rounded-lg shadow-md"
+            className="bg-cheeryyellow w-full p-6 rounded-lg shadow-md"
             onClick={() => router.push('/admin/product')}
           >
-            <p className="text-gray-500">TOTAL PRODUCT</p>
-            <p className="text-3xl font-bold text-green-500">
+            <p className="text-black font-bold">TOTAL PRODUCT</p>
+            <p className="text-3xl font-bold text-accentDark">
               {product.length}
             </p>
           </div>
-          <div className="bg-green-200 w-full p-6 rounded-lg shadow-md">
-            <p className="text-gray-500">TOTAL ALAMAT</p>
-            <p className="text-3xl font-bold text-green-500">
+          <div className="bg-cheeryyellow w-full p-6 rounded-lg shadow-md">
+            <p className="text-black font-bold">TOTAL ALAMAT</p>
+            <p className="text-3xl font-bold text-accentDark">
               {address.length}
             </p>
           </div>
-          <div className="bg-yellow-200 w-full p-6 rounded-lg shadow-md">
-            <p className="text-gray-500">TOTAL ORDER</p>
-            <p className="text-3xl font-bold text-green-500">{order.length}</p>
+          <div
+            className="bg-cheeryyellow w-full p-6 rounded-lg shadow-md"
+            onClick={() => router.push('/admin/order')}
+          >
+            <p className="text-black font-bold">TOTAL ORDER</p>
+            <p className="text-3xl font-bold text-accentDark">{order.length}</p>
           </div>
+        </div>
+        <div className="w-full max-w-6xl mt-6">
+          <ResponsiveContainer width="100%" height={400}>
+            <BarChart data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#0a6406" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </Container>
@@ -223,21 +256,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-
-// import React from 'react';
-// import Navbar from './Navbar';
-// import Sidebar from './Sidebar';
-// import Dashboard from './Dashboard';
-// const AdminDashboard = () => {
-//     return (
-//         <div className="flex h-screen">
-//           <Sidebar />
-//           <div className="flex-1 flex flex-col">
-//             <Navbar />
-//             <Dashboard />
-//           </div>
-//         </div>
-//       );
-//     }
-
-// export default AdminDashboard;

@@ -7,6 +7,7 @@ import {
   logoutAdmin,
 } from '@/lib/features/auth/adminAuthSlice';
 import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 
 export default function AuthAllAdmin({
   children,
@@ -24,6 +25,7 @@ export default function AuthAllAdmin({
         if (!token) return router.push('/');
 
         const result = await dispatch(checkAdminToken(token));
+        console.log(result, 'check');
         if (!result) {
           dispatch(logoutAdmin());
           router.push('/404');

@@ -60,6 +60,14 @@ const Page = () => {
               <button
                 className="px-4 py-2 text-sm font-medium text-white bg-cheeryyellow hover:bg-yellow-600 rounded"
                 onClick={() => {
+                  router.push('/admin/adminDashboard');
+                }}
+              >
+                Admin Dashboard
+              </button>
+              <button
+                className="px-4 py-2 text-sm font-medium text-white bg-cheeryyellow hover:bg-yellow-600 rounded"
+                onClick={() => {
                   router.push('/admin/products');
                 }}
               >
