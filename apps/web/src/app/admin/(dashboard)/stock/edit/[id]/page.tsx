@@ -166,7 +166,7 @@ const Page = ({ params: { id } }: Props) => {
                   type="submit"
                   className="w-full bg-[#0a6406] text-white py-2 rounded-md hover:bg-[#739802] transition duration-200"
                 >
-                  {isLoading ? 'Loading...' : 'Edit Store'}
+                  {isLoading ? 'Loading...' : 'Edit Stock'}
                 </button>
               </div>
             </form>

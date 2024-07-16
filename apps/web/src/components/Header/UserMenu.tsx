@@ -39,9 +39,9 @@ const UserMenu: React.FC = () => {
                 <Link href="/products">
                   <MenuItem onClick={toggleOpen}> Products</MenuItem>
                 </Link>
-                <Link href="#">
+                {/* <Link href={`/user/update`}>
                   <MenuItem onClick={toggleOpen}> My Profil</MenuItem>
-                </Link>
+                </Link> */}
                 <Link href="/orders">
                   <MenuItem onClick={toggleOpen}> My Orders</MenuItem>
                 </Link>

@@ -174,7 +174,7 @@ export default function CreateStock() {
                   type="submit"
                   className="w-full bg-[#0a6406] text-white py-2 rounded-md hover:bg-[#739802] transition duration-200"
                 >
-                  {isLoading ? 'Loading...' : 'Create Stock'}
+                  {isLoading ? 'Loading...' : 'Create Stock!'}
                 </button>
               </div>
             </form>

@@ -177,7 +177,7 @@ const AdminDashboard = () => {
           </div>
           <div className=" md:justify-self-end space-x-2">
             <button
-              className="px-4 py-2 text-sm font-medium text-white bg-accentDark hover:bg-accent rounded"
+              className="px-4 py-2 text-sm font-medium text-white bg-cheeryred hover:bg-[#ff2b2bec] rounded"
               onClick={() => {
                 localStorage.clear();
                 router.push('/');
