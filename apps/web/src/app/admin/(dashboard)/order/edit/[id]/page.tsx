@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Container from '@/components/Container';
 import { Order } from '@/interfaces/order.interface';
 import Image from 'next/image';
+import { formatRupiah } from '@/app/utils/formatRupiah';
 
 type Props = { params: { id: number } };
 
@@ -31,7 +32,7 @@ const Page = ({ params: { id } }: Props) => {
   return (
     <Container>
       <div className="flex justify-center items-center h-screen">
-        <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow-md dark:border-gray-700">
           <div>
             <a href="#">
               <Image
@@ -44,7 +45,7 @@ const Page = ({ params: { id } }: Props) => {
             </a>
             <div className="px-5 -mt-12 pb-5">
               <a href="#">
-                <h5 className=" text-4xl mb-5 font-bold tracking-tight text-gray-900 dark:text-white">
+                <h5 className=" text-4xl mb-5 font-bold tracking-tight text-gray-900 dark:text-black">
                   {order?.user?.name || 'Unknown User'}
                 </h5>
               </a>
@@ -85,8 +86,8 @@ const Page = ({ params: { id } }: Props) => {
                 </span>
               </div>
               <div className="flex items-center justify-between mt-4">
-                <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                  Rp.{order?.totalAmount},-
+                <span className="text-3xl font-bold text-gray-900 dark:text-black">
+                  {formatRupiah(order?.totalAmount)}
                 </span>
                 <button
                   onClick={() => router.back()}
