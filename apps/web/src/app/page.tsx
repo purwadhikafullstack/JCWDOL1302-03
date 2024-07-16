@@ -16,7 +16,7 @@ export default function Home() {
   const [filters, setFilters] = useState({
     name: '',
     page: 1,
-    pageSize: 12,
+    pageSize: 10,
   });
 
   useEffect(() => {

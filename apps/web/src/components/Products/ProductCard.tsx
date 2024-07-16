@@ -23,9 +23,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
           <Image
             fill
             src={
-              data.image.image
-                ? process.env.NEXT_PUBLIC_BASE_PRUDUCT_IMAGE_URL +
-                  data.image.image
+              data.image
+                ? process.env.NEXT_PUBLIC_BASE_PRUDUCT_IMAGE_URL + data.image
                 : '/default_img.jpg'
             }
             alt={data.name}

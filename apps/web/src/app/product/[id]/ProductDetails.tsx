@@ -32,7 +32,6 @@ const ProductDetails = ({ product }: Props) => {
   const user = useAppSelector((state) => state.auth.user);
   const [isAllow, setIsAllow] = useState(false);
   const [stores, setStores] = useState<any[]>([]);
-  const [store_id, setStoreId] = useState<number | null>(null);
   const dispatch = useAppDispatch();
   const cart = useAppSelector((state) => state.cart);
 
@@ -62,18 +61,13 @@ const ProductDetails = ({ product }: Props) => {
         longitude: user.longitude,
         latitude: user.latitude,
       });
+      setStores(dataStores);
 
-      // Tampilin toko jarak <= 50km dari user
-      if (dataStores) {
-        const nearbyStores = dataStores.filter((store) => store.distance <= 50);
-        setStores(nearbyStores);
-      }
-
-      if (dataCart.store_id && !store_id) {
-        setStoreId(dataCart.store_id);
+      if (dataCart.store_id) {
+        dispatch(updateCartStoreState({ store_id: dataCart.store_id }));
       }
     })();
-  }, [user, store_id]);
+  }, [dispatch, user]);
 
   type ChangeEvent =
     | React.ChangeEvent<HTMLInputElement>
@@ -181,8 +175,8 @@ const ProductDetails = ({ product }: Props) => {
             className="rounded-md w-full h-full object-cover"
             alt={product.name}
             src={
-              product.image.image
-                ? process.env.NEXT_PUBLIC_BASE_PRUDUCT_IMAGE_URL + product.image.image
+              product.image
+                ? process.env.NEXT_PUBLIC_BASE_PRUDUCT_IMAGE_URL + product.image
                 : '/default_img.jpg'
             }
             width="0"
@@ -212,7 +206,7 @@ const ProductDetails = ({ product }: Props) => {
               <div className="space-y-4">
                 {isAllow && (
                   <div className="space-y-4">
-                    <div className="form-control" id="province">
+                    <div>
                       <label className="form-label font-bold">Store</label>
                       <select
                         id="store_id"
@@ -220,6 +214,7 @@ const ProductDetails = ({ product }: Props) => {
                         value={cart.store_id}
                         onChange={handleChangeStore}
                         className="mt-1 block w-full px-3 py-2 border rounded-md focus:ring-accent focus:border-accent sm:text-sm"
+                        required
                       >
                         {stores?.map((store) => (
                           <option key={store.id} value={store.id}>
@@ -237,6 +232,7 @@ const ProductDetails = ({ product }: Props) => {
                         type="number"
                         value={formData.quantity}
                         onChange={handleChange}
+                        required
                         min={1}
                       />
                     </div>
@@ -244,8 +240,9 @@ const ProductDetails = ({ product }: Props) => {
                 )}
                 {isAllow && (
                   <button
-                    className="w-full py-3 mt-8 text-lg font-medium uppercase bg-accentDark text-white rounded-md hover:bg-accent"
+                    className="w-full py-3 mt-8 text-lg font-medium uppercase bg-accentDark text-white rounded-md hover:bg-accent disabled:bg-gray-400 disabled:cursor-not-allowed"
                     type="submit"
+                    disabled={product.stock <= 0}
                   >
                     <span className="ml-5">Add to Cart</span>
                   </button>
@@ -260,6 +257,10 @@ const ProductDetails = ({ product }: Props) => {
             <li>
               <span className="font-bold">Category: </span>
               {categoryName}
+            </li>
+            <li>
+              <span className="font-bold">Stock: </span>
+              {product.stock}
             </li>
           </ul>
         </div>

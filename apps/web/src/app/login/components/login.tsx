@@ -37,7 +37,7 @@ export default function Login() {
       } else if (routerNext === '/login/admin') {
         dispatch(loginAdmin({ email, password }));
         resetForm();
-        router.push('/');
+        router.push('/admin/adminDashboard');
       }
     },
   })(InnerForm);

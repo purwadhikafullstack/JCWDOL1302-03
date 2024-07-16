@@ -4,7 +4,7 @@ export interface FilterStore {
   pageSize?: number;
 }
 
-export interface IUSerLocation {
+export interface IUserLocation {
   longitude?: number;
   latitude?: number;
 }

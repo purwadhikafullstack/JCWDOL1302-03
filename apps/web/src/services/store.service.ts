@@ -1,8 +1,4 @@
-import {
-  FilterStore,
-  IStore,
-  IUSerLocation,
-} from '@/interfaces/store.interface';
+import { FilterStore, IUserLocation } from '@/interfaces/store.interface';
 import instance from '@/utils/instances';
 
 export const getStores = async ({
@@ -80,7 +76,7 @@ export const deleteStore = async (id: number) => {
   }
 };
 
-export const getDistanceStores = async (userLocation: IUSerLocation) => {
+export const getDistanceStores = async (userLocation: IUserLocation) => {
   try {
     const token = localStorage.getItem('token');
     const config = {
@@ -93,53 +89,10 @@ export const getDistanceStores = async (userLocation: IUSerLocation) => {
       userLocation,
       config,
     );
-    const stores: IStore[] = data?.data;
-
-    if (!stores) {
-      return []; // or throw an error, depending on your requirements
-    }
-
-    // Dihitung jarak antara lokasi user dan lokasi toko
-    const distances = stores.map((store: IStore) => {
-      const lat1 = userLocation.latitude ?? 0;
-      const lon1 = userLocation.longitude ?? 0;
-      const lat2 = store.latitude ?? 0;
-      const lon2 = store.longitude ?? 0;
-      const distance = calculateDistance(lat1, lon1, lat2, lon2);
-      return { ...store, distance };
-    });
-
-    // Filter toko dengan jarak <= 50 km
-    const filteredStores = distances.filter(
-      (store: IStore) => store.distance <= 30,
-    );
-
-    return filteredStores;
+    const stores = data?.data;
+    return stores;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
-const calculateDistance = (
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number,
-) => {
-  const R = 6371; // Jari-jari bumi (km)
-  const dLat = deg2rad(lat2 - lat1);
-  const dLon = deg2rad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(deg2rad(lat1)) *
-      Math.cos(deg2rad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c;
-  return distance;
-};
-
-const deg2rad = (deg: number) => {
-  return deg * (Math.PI / 180);
-};

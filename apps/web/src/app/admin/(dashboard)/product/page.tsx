@@ -56,7 +56,15 @@ const Page = () => {
                 <a className="text-accentDark"> Management</a>
               </h1>
             </div>
-            <div className=" md:justify-self-end">
+            <div className=" mt-4 md:justify-self-end space-x-2">
+              <button
+                className="px-4 py-2 text-sm font-medium text-white bg-cheeryyellow hover:bg-yellow-600 rounded"
+                onClick={() => {
+                  router.push('/admin/products');
+                }}
+              >
+                Admin Product List
+              </button>
               <button
                 className="px-4 py-2 text-sm font-medium text-white bg-accentDark hover:bg-accent rounded"
                 onClick={() => {

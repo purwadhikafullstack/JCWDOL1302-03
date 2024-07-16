@@ -3,7 +3,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { FaBasketShopping } from 'react-icons/fa6';
-import SearchBar from './SearchBar';
 import Container from '../Container';
 import UserMenu from './UserMenu';
 import SubHeader from './SubHeader';
@@ -31,18 +30,8 @@ export const Header = () => {
           <div className="flex justify-between items-center pt-5 py-5">
             {/* LOGO SECTION */}
             <Link href="/">
-              <Image
-                src="/logo.png"
-                alt="logo"
-                width={150}
-                height={100}
-                className="md:flex hidden"
-              />
+              <Image src="/logo.png" alt="logo" width={150} height={100} />
             </Link>
-            {/* SEARCHBAR SECTION */}
-            <div className="md:block w-full max-w-[600px] mr-4 ml-4">
-              <SearchBar />
-            </div>
             {/* MENU SECTION */}
             <div className="flex items-center ">
               <Link href={'/cart'}>

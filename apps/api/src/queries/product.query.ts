@@ -41,7 +41,7 @@ const getProductsQuery = async (
   filters: FilterProduct,
 ): Promise<ResultProduct> => {
   try {
-    const { name = '', page = 1, pageSize = 10 } = filters;
+    const { name = '', page = 1, pageSize = 10000 } = filters;
     const skip = Number(page) > 1 ? (Number(page) - 1) * Number(pageSize) : 0;
     const take = Number(pageSize);
 
@@ -132,7 +132,6 @@ const updateProductQuery = async (
     throw err;
   }
 };
-
 
 const deleteProductQuery = async (id: number): Promise<IProduct> => {
   try {

@@ -35,6 +35,16 @@ const ProductsList = () => {
                 <a className="text-accentDark"> our Products</a>
               </h1>
             </div>
+            <div className="md:justify-self-end">
+              <input
+                placeholder="Search product ..."
+                className="border border-gray-300 focus:outline-none focus:border-[0.5px] focus:border-[#0a6406] px-6 py-3 rounded-[300px] w-full text-sm"
+                value={filters.name}
+                onChange={(e) =>
+                  setFilters({ ...filters, name: e.target.value, page: 1 })
+                }
+              />
+            </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
             {data.products?.map((product: any) => {

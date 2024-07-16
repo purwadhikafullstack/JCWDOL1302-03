@@ -40,6 +40,7 @@ export class StoreActions {
   public getDistanceStoresAction = async (userLocation: IUserLocation) => {
     try {
       const { stores } = await this.storeQuery.getStoresQuery({});
+      const maxDistance = 30;
       const distanceStores = stores.map((store) => {
         const distance =
           userLocation.longitude &&
@@ -48,7 +49,7 @@ export class StoreActions {
           store.latitude
             ? haversine(
                 {
-                  longitude: userLocation.latitude,
+                  longitude: userLocation.longitude,
                   latitude: userLocation.latitude,
                 },
                 { longitude: store.longitude, latitude: store.latitude },
@@ -56,6 +57,7 @@ export class StoreActions {
             : null;
         return { ...store, distance };
       });
+
       return distanceStores.sort(
         (a, b) => (a.distance as number) - (b.distance as number),
       );
