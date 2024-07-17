@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "target": "ES2015",
     "module": "commonjs",
     "strict": true,
@@ -14,5 +15,6 @@
   },
   // "include": ["src/**/*"],
   "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "files":["src/types/index.d.ts"]
 }

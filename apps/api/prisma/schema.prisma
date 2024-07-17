@@ -8,6 +8,7 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Sample {
@@ -19,3 +20,264 @@ model Sample {
 
   @@map("samples") // if you want to use snake_case format
 }
+
+model User {
+  id                  Int @id @default(autoincrement())
+  username            String? @unique
+  email               String @unique
+  password            String
+  verified            Boolean
+  referralCode        String
+  name                String
+  gender              String
+  birthDate           DateTime
+  role                String @default("user")
+  profilePicture      String
+  claimedCode         String
+  longitude           Float?
+  latitude            Float?
+  
+  address             Address[]
+  cart                Cart[]
+  order               Order[]
+
+  @@map("users")
+}
+
+model Address {
+  id            Int @id @default(autoincrement())
+
+  user_id       Int
+  user          User @relation(fields: [user_id], references: [id])
+
+  address       String
+  subdistrict   String
+  city          String
+  province      String
+  postalCode    String
+  country       String
+  isPrimary     Boolean @default(false)
+
+  @@map("addresses")
+}
+
+model Voucher {
+  id          Int      @id @default(autoincrement())
+  code        String
+  type        String
+  value       String
+  maxDiscount String
+  expiryDate  DateTime
+
+  order Order[]
+
+  @@map("vouchers")
+}
+
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  email    String @unique
+  password String
+
+  role_id Int
+  role    Role @relation(fields: [role_id], references: [id])
+
+  store   Store[]
+  product Product[]
+
+  @@map("admins")
+}
+
+model Role {
+  id   Int    @id @default(autoincrement())
+  role String
+
+  admin Admin[]
+
+  @@map("roles")
+}
+
+
+model Store{
+  id            Int @id @default(autoincrement())
+  
+  admin_id      Int
+  admin         Admin @relation(fields: [admin_id], references: [id])
+
+  name          String @unique
+  address       String
+  city          String
+  province      String
+  postalCode    String?
+  latitude      Float?
+  longitude     Float?
+  createdDate   DateTime  @default(now())
+  updatedDate   DateTime  @updatedAt
+
+  order         Order[]
+  inventory     Inventory[]
+  discount      Discount[]
+  carts         Cart[]
+
+  @@map("stores")
+}
+
+
+model Product{
+  id             Int @id @default(autoincrement())
+
+  admin_id       Int
+  admin          Admin @relation(fields: [admin_id], references: [id])
+
+  name           String
+  description    String
+  price          Int
+  
+  category_id    Int
+  category       Category @relation(fields: [category_id], references: [id])
+
+  image          String 
+  stock          Int
+  Inventory      Inventory[]
+  cartItems      CartItem[]
+
+  @@map("products")
+}
+
+model Category {
+  id       Int    @id @default(autoincrement())
+  category String
+
+  product Product[]
+
+  @@map("categories")
+}
+
+model Cart{
+  id            Int @id @default(autoincrement())
+  
+  user_id       Int
+  user          User @relation(fields: [user_id], references: [id])
+  store_id      Int?
+  store         Store? @relation(fields: [store_id], references: [id])
+  totalAmount   Float
+  createdDate   DateTime  @default(now())
+  updatedDate   DateTime  @updatedAt
+
+  cartItems      CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem{
+  id            Int @id @default(autoincrement())
+  name          String
+  description   String
+  cart_id       Int
+  cart          Cart @relation(fields: [cart_id], references: [id])
+  product_id    Int
+  product       Product @relation(fields: [product_id], references: [id])
+  quantity      Int
+  price         Float
+
+  @@map("cart_items")
+}
+
+model Inventory {
+  id Int @id @default(autoincrement())
+
+  store_id Int
+  store    Store @relation(fields: [store_id], references: [id])
+
+  product_id Int
+  product    Product @relation(fields: [product_id], references: [id])
+
+  description String
+  quantity    Int
+  updateAt    DateTime @updatedAt
+
+  @@map("inventories")
+}
+
+model Discount {
+  id Int @id @default(autoincrement())
+
+  store_id Int
+  store    Store @relation(fields: [store_id], references: [id])
+
+  type        String
+  value       String
+  minPurchase Int
+  maxPurchase Int
+  startDate   DateTime
+  endDate     DateTime
+
+  @@map("discounts")
+}
+
+model Order {
+  id Int @id @default(autoincrement())
+
+  user_id Int
+  user    User @relation(fields: [user_id], references: [id])
+
+  store_id Int
+  store    Store @relation(fields: [store_id], references: [id])
+
+  voucher_id Int
+  voucher    Voucher @relation(fields: [voucher_id], references: [id])
+
+  status      String
+  totalAmount Int
+  createdAt   DateTime @default(now())
+  updateAt    DateTime @updatedAt
+
+  payment   Payment[]
+  shipment  Shipment[]
+  orderItem OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id Int @id @default(autoincrement())
+
+  order_id Int
+  order    Order @relation(fields: [order_id], references: [id])
+
+  quantity Int
+  price    Int
+
+  @@map("order_items")
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+
+  order_id Int
+  order    Order @relation(fields: [order_id], references: [id])
+
+  method    String
+  status    String
+  proof     String
+  createdAt DateTime @default(now())
+
+  @@map("payments")
+}
+
+model Shipment {
+  id Int @id @default(autoincrement())
+
+  order_id Int
+  order    Order @relation(fields: [order_id], references: [id])
+
+  tracking_number String
+  status          String
+  createdAt       DateTime @default(now())
+
+  @@map("shipments")
+}
+
+
